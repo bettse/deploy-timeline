@@ -19,7 +19,7 @@ import './App.css'
 export default class App extends Component {
   constructor(props, context) {
     super(props, context)
-    console.log('window.location.hash', window.location.hash)
+    const session = JSON.parse(localStorage.getItem('user'))
     const response = parseHash(window.location.hash)
     /* Clear hash */
     removeHash()
@@ -33,14 +33,17 @@ export default class App extends Component {
     /* Clean up csrfToken */
     localStorage.removeItem(response.csrf)
 
+    const user = response.csrf ? response : session
+
     /* Set initial app state */
     this.state = {
-      user: response,
+      user,
       sites: [],
       filterText: '',
       loading: false,
       sortBy: 'published_at',
-      sortOrder: 'desc'
+      sortOrder: 'desc',
+      selectedSite: null,
     }
   }
   async componentDidMount() {
@@ -54,6 +57,7 @@ export default class App extends Component {
 
     /* Fetch sites from netlify API */
     const client = new NetlifyAPI(window.atob(user.token))
+    localStorage.setItem('user', JSON.stringify(user));
     const sites = await client.listSites({
       filter: 'all'
     })
