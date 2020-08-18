@@ -13,6 +13,7 @@ import {
 import ForkMe from './components/ForkMe'
 import loginButton from './assets/netlify-login-button.svg'
 import './App.css'
+import DeployTimeline from './DeployTimeline'
 
 // import stub from './stub'
 
@@ -35,10 +36,12 @@ export default class App extends Component {
 
     const user = response.csrf ? response : session
 
+    const sites = JSON.parse(localStorage.getItem('sites-cache') || '[]')
+
     /* Set initial app state */
     this.state = {
       user,
-      sites: [],
+      sites,
       filterText: '',
       loading: false,
       sortBy: 'published_at',
@@ -61,6 +64,8 @@ export default class App extends Component {
     const sites = await client.listSites({
       filter: 'all'
     })
+
+    localStorage.setItem('sites-cache', JSON.stringify(sites))
 
     /* Set sites and turn off loading state */
     this.setState({
@@ -97,10 +102,17 @@ export default class App extends Component {
       })
     }
   }
+
+  clearSelectedSite = e => {
+    this.setState({
+      selectedSite: null
+    })
+  }
+
   renderSiteList = () => {
     const { sites, filterText, loading, sortBy, sortOrder } = this.state
 
-    if (loading) {
+    if (loading && sites.length === 0) {
       return <div>Loading sites...</div>
     }
 
@@ -160,58 +172,34 @@ export default class App extends Component {
       const functions = published_deploy.available_functions || []
       const functionsNames = functions.map(func => func.n).join(', ')
       const build_settings = site.build_settings || {}
-      const { repo_url } = build_settings
+      const { repo_url = '' } = build_settings
       const time = published_deploy.published_at ? timeAgo.ago(new Date(published_deploy.published_at).getTime()) : 'NA'
       const createdAt = created_at ? timeAgo.ago(new Date(created_at).getTime()) : 'NA'
       return (
-        <div className='site-wrapper' key={i}>
+        <div className='site-wrapper' key={i} onClick={() => this.setState({selectedSite: site})}>
           <div className='site-screenshot'>
-            <a href={admin_url} target='_blank' rel='noopener noreferrer'>
-              <img src={screenshot_url} alt='' />
-            </a>
+            <img src={screenshot_url} alt='' />
           </div>
           <div className='site-info'>
             <h2>
-              <a href={admin_url} target='_blank' rel='noopener noreferrer'>
-                {name}
-              </a>
+              {name}
             </h2>
             <div className='site-meta'>
-              <a href={ssl_url} target='_blank' rel='noopener noreferrer'>
                 {ssl_url}
-              </a>
             </div>
           </div>
           <div className='site-team'>
-            <a
-              href={`https://app.netlify.com/teams/${account_slug}/sites/`}
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              {account_name}
-            </a>
+            {account_name}
           </div>
           <div className='site-publish-time'>{time}</div>
           <div className='site-functions'>
             <div title={functionsNames}>
-              <a
-                href={`${admin_url}/functions`}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                {functions.length}
-              </a>
+              {functions.length}
             </div>
           </div>
           <div className='site-create-time'>{createdAt}</div>
           <div className='site-repo-link'>
-            {repo_url ? (
-              <a href={repo_url} target='_blank' rel='noopener noreferrer'>
-                {repo_url.replace(/^https:\/\//, '')}
-              </a>
-            ) : (
-              ''
-            )}
+            {repo_url.replace(/^https:\/\//, '')}
           </div>
         </div>
       )
@@ -229,7 +217,7 @@ export default class App extends Component {
     return matchingSites
   }
   render() {
-    const { user } = this.state
+    const { selectedSite, user } = this.state
 
     /* Not logged in. Show login button */
     if (user && !user.token) {
@@ -242,6 +230,15 @@ export default class App extends Component {
           </button>
         </div>
       )
+    }
+
+    if (selectedSite) {
+      return (
+        <div>
+          <button onClick={this.clearSelectedSite}> Back </button>
+          <DeployTimeline user={user} site={selectedSite} />
+        </div>
+      );
     }
 
     /* Show admin UI */
