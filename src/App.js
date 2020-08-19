@@ -20,7 +20,7 @@ import DeployTimeline from './DeployTimeline'
 export default class App extends Component {
   constructor(props, context) {
     super(props, context)
-    const session = JSON.parse(localStorage.getItem('user'))
+    const session = JSON.parse(localStorage.getItem('user') || '{}')
     const response = parseHash(window.location.hash)
     /* Clear hash */
     removeHash()
