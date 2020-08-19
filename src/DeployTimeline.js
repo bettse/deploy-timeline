@@ -28,9 +28,10 @@ export default class DeployTimeline extends Component {
     const { site_id } = site
 
     const client = new NetlifyAPI(window.atob(user.token))
-    const deploys = await client.listSiteDeploys({
+    const results = await client.listSiteDeploys({
       site_id,
-    })
+    });
+    const deploys = results.sort((a, b) => new Date(a.published_at) - new Date(b.published_at))
 
     localStorage.setItem(`${site_id}-deploys`, JSON.stringify(deploys))
     this.setState({deploys})
