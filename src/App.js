@@ -162,8 +162,6 @@ export default class App extends Component {
       const {
         name,
         account_name,
-        account_slug,
-        admin_url,
         ssl_url,
         screenshot_url,
         created_at
