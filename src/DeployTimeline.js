@@ -8,8 +8,6 @@ import Carousel from 'react-bootstrap/Carousel'
 import Spinner from 'react-bootstrap/Spinner'
 import Image from 'react-bootstrap/Image'
 
-import missing from './assets/missing.png'
-
 export default class DeployTimeline extends Component {
   constructor(props, context) {
     super(props, context)
@@ -49,17 +47,6 @@ export default class DeployTimeline extends Component {
       );
     }
 
-    let prevScreenshot = missing;
-    const fixSS = deploy => {
-      const { screenshot_url } = deploy;
-      if (screenshot_url) {
-        prevScreenshot = screenshot_url;
-        return deploy;
-      } else {
-        return {...deploy, screenshot_url: prevScreenshot}
-      }
-    }
-
     return (
       <Container>
         <Row>
@@ -68,7 +55,7 @@ export default class DeployTimeline extends Component {
           <Col>
             <h1>{name}</h1>
             <Carousel>
-            {deploys.map(fixSS).map((deploy, i) => {
+            {deploys.filter(d => d.screenshot_url).map((deploy, i) => {
               const { screenshot_url } = deploy
               return (
               <Carousel.Item key={i}>
