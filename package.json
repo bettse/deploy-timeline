@@ -5,10 +5,12 @@
   "dependencies": {
     "bootstrap": "4.3",
     "bootswatch": "4.3.1",
+    "gifshot": "^0.4.5",
     "netlify": "^2.4.0",
     "react": "^16.8.3",
     "react-bootstrap": "1.2.2",
     "react-dom": "^16.8.3",
+    "react-if": "^3.4.3",
     "react-scripts": "2.1.5",
     "time-ago": "^0.2.1"
   },
