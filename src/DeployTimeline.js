@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import NetlifyAPI from 'netlify'
 
+import gifshot from 'gifshot'
+import { If, Then, Else } from 'react-if'
+
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -18,6 +21,7 @@ export default class DeployTimeline extends Component {
 
     this.state = {
       deploys,
+      gif: null,
     }
   }
 
@@ -30,6 +34,23 @@ export default class DeployTimeline extends Component {
       site_id,
     });
     const deploys = results.sort((a, b) => new Date(a.published_at) - new Date(b.published_at))
+    const images = deploys.map(d => d.screenshot_url).filter(url => url)
+
+    const gifOptions = {
+      gifWidth: 900,
+      gifHeight: 600,
+      frameDuration: 2,
+      images
+    }
+    gifshot.createGIF(gifOptions, (obj) => {
+      const { error, image } = obj
+      if (error) {
+        console.log('gifshot error', obj.error)
+        return;
+      }
+
+      this.setState({gif: image})
+    });
 
     localStorage.setItem(`${site_id}-deploys`, JSON.stringify(deploys))
     this.setState({deploys})
@@ -37,7 +58,7 @@ export default class DeployTimeline extends Component {
 
   render() {
     const { site } = this.props
-    const { deploys } = this.state
+    const { deploys, gif } = this.state
     const { name } = site
     //{id, site_id, plan, ssl_plan, premium, claimed, name, custom_domain, domain_aliases, password, notification_email, url, admin_url, deploy_id, build_id, deploy_url, state, screenshot_url, created_at, updated_at, user_id, error_message, ssl, ssl_url, force_ssl, ssl_status, max_domain_aliases, build_settings, processing_settings, prerender, prerender_headers, deploy_hook, published_deploy, managed_dns, jwt_secret, jwt_roles_path, account_slug, account_name, account_type, capabilities, paid_individual_site_subscription, dns_zone_id, identity_instance_id, use_functions, parent_user_id, automatic_tls_provisioning, disabled, lifecycle_state, id_domain, use_lm, build_image, automatic_tls_provisioning_expired, analytics_instance_id, functions_region, functions_config, plugins}
 
@@ -50,11 +71,27 @@ export default class DeployTimeline extends Component {
     return (
       <Container>
         <Row>
-          <Col xs={1} sm={1} md={1} lg={1} xl={1}>
-          </Col>
           <Col>
             <h1>{name}</h1>
-            <Carousel>
+           </Col>
+        </Row>
+        <Row className="justify-content-center">
+          <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
+            <If condition={gif === null}>
+              <Then>
+                <Spinner animation="grow" variant="secondary" />
+                Building Gif
+                <Spinner animation="grow" variant="secondary" />
+              </Then>
+              <Else>
+                <Image src={gif} fluid rounded alt="Animation of screenshots" />
+              </Else>
+            </If>
+          </Col>
+        </Row>
+        <Row className="justify-content-center">
+          <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
+            <Carousel fade indicators={false} interval={null} keyboard={false} slide={false} touch={false} wrap={false}>
             {deploys.filter(d => d.screenshot_url).map((deploy, i) => {
               const { screenshot_url } = deploy
               return (
@@ -64,8 +101,6 @@ export default class DeployTimeline extends Component {
               )
             })}
             </Carousel>
-          </Col>
-          <Col xs={1} sm={1} md={1} lg={1} xl={1}>
           </Col>
         </Row>
       </Container>
