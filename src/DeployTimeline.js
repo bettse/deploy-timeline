@@ -90,20 +90,6 @@ export default class DeployTimeline extends Component {
         </Row>
         <Row className="justify-content-center">
           <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
-            <If condition={gif === null}>
-              <Then>
-                <Spinner animation="grow" variant="secondary" />
-                Building Gif
-                <Spinner animation="grow" variant="secondary" />
-              </Then>
-              <Else>
-                <Image src={gif} fluid rounded alt="Animation of screenshots" />
-              </Else>
-            </If>
-          </Col>
-        </Row>
-        <Row className="justify-content-center">
-          <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
             <Carousel
               fade
               indicators={false}
@@ -131,6 +117,20 @@ export default class DeployTimeline extends Component {
                 <Form.Control type="range" onChange={this.timelineChange} value={selectedScreenshot} min={0} max={screenshots.length} step={1} size="lg"/>
               </Form.Group>
             </Form>
+          </Col>
+        </Row>
+        <Row className="justify-content-center">
+          <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
+            <If condition={gif === null}>
+              <Then>
+                <Spinner animation="grow" variant="secondary" />
+                Building Gif
+                <Spinner animation="grow" variant="secondary" />
+              </Then>
+              <Else>
+                <Image src={gif} fluid rounded alt="Animation of screenshots" />
+              </Else>
+            </If>
           </Col>
         </Row>
       </Container>
