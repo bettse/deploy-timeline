@@ -11,6 +11,7 @@ import Carousel from 'react-bootstrap/Carousel'
 import Spinner from 'react-bootstrap/Spinner'
 import Image from 'react-bootstrap/Image'
 import Form from 'react-bootstrap/Form'
+import Card from 'react-bootstrap/Card'
 
 const DECIMAL = 10;
 
@@ -90,33 +91,35 @@ export default class DeployTimeline extends Component {
         </Row>
         <Row className="justify-content-center">
           <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
-            <Carousel
-              fade
-              indicators={false}
-              interval={null}
-              keyboard={false}
-              slide={false}
-              touch={false}
-              wrap={false}
-              activeIndex={selectedScreenshot}
-            >
-            {screenshots.map((url, i) => {
-              return (
-              <Carousel.Item key={i}>
-                <Image src={url} fluid rounded alt="Screenshot" />
-              </Carousel.Item>
-              )
-            })}
-            </Carousel>
-          </Col>
-        </Row>
-        <Row className="justify-content-center">
-          <Col className="w-100" xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
-            <Form className="w-100">
-              <Form.Group controlId="timeline" className="w-100">
-                <Form.Control type="range" onChange={this.timelineChange} value={selectedScreenshot} min={0} max={screenshots.length - 1} step={1} size="lg"/>
-              </Form.Group>
-            </Form>
+            <Card border="primary" bg="light" className="text-center" >
+              <Card.Body>
+                <Carousel
+                  fade
+                  indicators={false}
+                  interval={null}
+                  keyboard={false}
+                  slide={false}
+                  touch={false}
+                  wrap={false}
+                  activeIndex={selectedScreenshot}
+                >
+                {screenshots.map((url, i) => {
+                  return (
+                  <Carousel.Item key={i}>
+                    <Card.Img variant="top" src={url} alt="Screenshot" />
+                  </Carousel.Item>
+                  )
+                })}
+                </Carousel>
+              </Card.Body>
+            <Card.Footer>
+              <Form className="w-100">
+                <Form.Group controlId="timeline" className="w-100">
+                  <Form.Control type="range" onChange={this.timelineChange} value={selectedScreenshot} min={0} max={screenshots.length - 1} step={1} size="lg"/>
+                </Form.Group>
+              </Form>
+            </Card.Footer>
+            </Card>
           </Col>
         </Row>
         <Row className="justify-content-center">
