@@ -111,10 +111,10 @@ export default class DeployTimeline extends Component {
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
-            <Form>
-              <Form.Group controlId="timeline">
-                <Form.Control type="range" onChange={this.timelineChange} value={selectedScreenshot} min={0} max={screenshots.length} step={1} size="lg"/>
+          <Col className="w-100" xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
+            <Form className="w-100">
+              <Form.Group controlId="timeline" className="w-100">
+                <Form.Control type="range" onChange={this.timelineChange} value={selectedScreenshot} min={0} max={screenshots.length - 1} step={1} size="lg"/>
               </Form.Group>
             </Form>
           </Col>
@@ -128,7 +128,7 @@ export default class DeployTimeline extends Component {
                 <Spinner animation="grow" variant="secondary" />
               </Then>
               <Else>
-                <Image src={gif} fluid rounded alt="Animation of screenshots" />
+                <Image width={300} height={200} src={gif} fluid rounded alt="Animation of screenshots" />
               </Else>
             </If>
           </Col>
