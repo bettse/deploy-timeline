@@ -69,6 +69,10 @@ export default class DeployTimeline extends Component {
     this.setState({selectedScreenshot: parseDecimal(value)})
   }
 
+  carouselSelect = (value) => {
+    this.setState({selectedScreenshot: parseDecimal(value)})
+  }
+
   render() {
     const { site } = this.props
     const { deploys, gif, selectedScreenshot } = this.state
@@ -97,16 +101,15 @@ export default class DeployTimeline extends Component {
                   fade
                   indicators={false}
                   interval={null}
-                  keyboard={false}
                   slide={false}
-                  touch={false}
                   wrap={false}
                   activeIndex={selectedScreenshot}
+                  onSelect={this.carouselSelect}
                 >
                 {screenshots.map((url, i) => {
                   return (
                   <Carousel.Item key={i}>
-                    <Card.Img variant="top" src={url} alt="Screenshot" />
+                    <Card.Img src={url} alt="Screenshot" />
                   </Carousel.Item>
                   )
                 })}
