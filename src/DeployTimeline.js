@@ -86,6 +86,12 @@ export default class DeployTimeline extends Component {
     }
     const screenshots = deploys.map(d => d.screenshot_url).filter(url => url)
 
+    const arrowStyle = {
+      backgroundColor: 'black',
+      borderRadius: '50%',
+      border: '1px solid black',
+    }
+
     return (
       <Container>
         <Row>
@@ -105,6 +111,8 @@ export default class DeployTimeline extends Component {
                   wrap={false}
                   activeIndex={selectedScreenshot}
                   onSelect={this.carouselSelect}
+                  prevIcon={<span aria-hidden="true" className="carousel-control-prev-icon" style={arrowStyle} />}
+                  nextIcon={<span aria-hidden="true" className="carousel-control-next-icon" style={arrowStyle} />}
                 >
                 {screenshots.map((url, i) => {
                   return (
