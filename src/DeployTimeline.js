@@ -135,7 +135,7 @@ export default class DeployTimeline extends Component {
             </Card>
           </Col>
         </Row>
-        <Row className="justify-content-center text-center" style={{width: '100%'}} >
+        <Row className="justify-content-center text-center pt-3" style={{width: '100%'}} >
           <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto" style={{width: '100%'}} >
             <If condition={progress < 1}>
               <Then>
