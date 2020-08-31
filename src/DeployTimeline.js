@@ -12,6 +12,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import Image from 'react-bootstrap/Image'
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 const DECIMAL = 10;
 
@@ -28,6 +29,7 @@ export default class DeployTimeline extends Component {
     this.state = {
       deploys,
       gif: null,
+      progress: 0,
       selectedScreenshot: 0,
     }
   }
@@ -44,6 +46,7 @@ export default class DeployTimeline extends Component {
     const images = deploys.map(d => d.screenshot_url).filter(url => url)
 
     const gifOptions = {
+      progressCallback: (progress) => this.setState({progress}),
       gifWidth: 900,
       gifHeight: 600,
       frameDuration: 2,
@@ -75,9 +78,8 @@ export default class DeployTimeline extends Component {
 
   render() {
     const { site } = this.props
-    const { deploys, gif, selectedScreenshot } = this.state
+    const { deploys, gif, progress, selectedScreenshot } = this.state
     const { name } = site
-    //{id, site_id, plan, ssl_plan, premium, claimed, name, custom_domain, domain_aliases, password, notification_email, url, admin_url, deploy_id, build_id, deploy_url, state, screenshot_url, created_at, updated_at, user_id, error_message, ssl, ssl_url, force_ssl, ssl_status, max_domain_aliases, build_settings, processing_settings, prerender, prerender_headers, deploy_hook, published_deploy, managed_dns, jwt_secret, jwt_roles_path, account_slug, account_name, account_type, capabilities, paid_individual_site_subscription, dns_zone_id, identity_instance_id, use_functions, parent_user_id, automatic_tls_provisioning, disabled, lifecycle_state, id_domain, use_lm, build_image, automatic_tls_provisioning_expired, analytics_instance_id, functions_region, functions_config, plugins}
 
     if (!deploys || deploys.length === 0) {
       return (
@@ -133,13 +135,12 @@ export default class DeployTimeline extends Component {
             </Card>
           </Col>
         </Row>
-        <Row className="justify-content-center">
-          <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto">
-            <If condition={gif === null}>
+        <Row className="justify-content-center text-center" style={{width: '100%'}} >
+          <Col xs="auto" sm="auto" md="auto" lg="auto" xl="auto" style={{width: '100%'}} >
+            <If condition={progress < 1}>
               <Then>
-                <Spinner animation="grow" variant="secondary" />
                 Building Gif
-                <Spinner animation="grow" variant="secondary" />
+                <ProgressBar min={0} max={1} now={progress} striped variant="success" style={{width: '100%'}} />
               </Then>
               <Else>
                 <Image width={300} height={200} src={gif} fluid rounded alt="Animation of screenshots" />
