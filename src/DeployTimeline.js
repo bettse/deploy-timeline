@@ -119,7 +119,7 @@ export default class DeployTimeline extends Component {
                 {screenshots.map((url, i) => {
                   return (
                   <Carousel.Item key={i}>
-                    <Card.Img src={url} alt="Screenshot" />
+                    <Card.Img src={url} alt="Screenshot of a deploy" />
                   </Carousel.Item>
                   )
                 })}
