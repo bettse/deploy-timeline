@@ -6,7 +6,7 @@
     "bootstrap": "4.3",
     "bootswatch": "4.3.1",
     "gifshot": "^0.4.5",
-    "netlify": "^2.4.0",
+    "netlify": "^6.1.10",
     "react": "^16.8.3",
     "react-bootstrap": "1.2.2",
     "react-dom": "^16.8.3",

@@ -61,9 +61,19 @@ export default class App extends Component {
     /* Fetch sites from netlify API */
     const client = new NetlifyAPI(window.atob(user.token))
     localStorage.setItem('user', JSON.stringify(user));
-    const sites = await client.listSites({
-      filter: 'all'
-    })
+    const sites = [];
+    let page = 0;
+    const page_size = 100;
+    let results = [];
+    do {
+      results = await client.listSites({
+        page,
+        per_page: page_size,
+        filter: 'all'
+      })
+      page = page + 1
+      sites.push(...results)
+    } while (results.length === page_size)
 
     localStorage.setItem('sites-cache', JSON.stringify(sites))
 
