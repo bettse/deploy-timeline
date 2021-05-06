@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
 
     const authResult = oauth.accessToken.create(authorizationToken)
 
-    const token = authResult.token.access_token
+    const {access_token: token, refresh_token} = authResult.token
 
     const user = await getUser(token)
 
@@ -50,7 +50,9 @@ exports.handler = async (event, context) => {
       avatar: user.avatar_url || "NA"
     })
 
-    const URI = `${state.url}#${encodedUserData}&csrf=${state.csrf}&token=${Buffer.from(token, 'binary').toString('base64')}`
+    const tokenVal = Buffer.from(token, 'binary').toString('base64');
+    const refreshTokenVal = Buffer.from(refresh_token, 'binary').toString('base64');
+    const URI = `${state.url}#${encodedUserData}&csrf=${state.csrf}&token=${tokenVal}&refresh_token={refreshTokenVal}`
     console.log('URI', URI)
     /* Redirect user to authorizationURI */
     return {
