@@ -52,7 +52,7 @@ exports.handler = async (event, context) => {
 
     const tokenVal = Buffer.from(token, 'binary').toString('base64');
     const refreshTokenVal = Buffer.from(refresh_token, 'binary').toString('base64');
-    const URI = `${state.url}#${encodedUserData}&csrf=${state.csrf}&token=${tokenVal}&refresh_token={refreshTokenVal}`
+    const URI = `${state.url}#${encodedUserData}&csrf=${state.csrf}&token=${tokenVal}&refresh_token=${refreshTokenVal}`
     console.log('URI', URI)
     /* Redirect user to authorizationURI */
     return {
